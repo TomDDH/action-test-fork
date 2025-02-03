@@ -10,10 +10,22 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+
     - id: 'auth'
       uses: 'google-github-actions/auth@v2'
       with:
         credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+    - name: Set up Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build
+      run: npm run build
 
     # - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
     #   with:
@@ -24,5 +36,5 @@ jobs:
 
     - uses: GoogleCloudPlatform/github-actions/upload-cloud-storage@0.1.3
       with:
-        path: src/index.js
+        path: '/build'
         destination: github-action-test-tom
